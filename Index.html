@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Joke or Fake Game</title>
+</head>
+<body style="text-align:center; font-family:Arial;">
+
+<h1>😂 Joke or Fake?</h1>
+
+<p id="joke">Loading...</p>
+
+<button onclick="checkAnswer('real')">Real</button>
+<button onclick="checkAnswer('fake')">Fake</button>
+
+<p id="result"></p>
+<button onclick="loadJoke()">Next</button>
+
+<script>
+let currentAnswer = "real";
+
+// some fake jokes
+const fakeJokes = [
+    "Why did the laptop go to school? To improve its byte!",
+    "Why did the AI cross the road? To optimize the other side.",
+    "Why don’t robots get tired? Because they recharge themselves."
+];
+
+async function loadJoke() {
+    document.getElementById("result").innerText = "";
+
+    // randomly decide real or fake
+    const isReal = Math.random() > 0.5;
+
+    if (isReal) {
+        const res = await fetch("https://official-joke-api.appspot.com/random_joke");
+        const data = await res.json();
+
+        document.getElementById("joke").innerText =
+            data.setup + " " + data.punchline;
+
+        currentAnswer = "real";
+    } else {
+        const fake = fakeJokes[Math.floor(Math.random() * fakeJokes.length)];
+        document.getElementById("joke").innerText = fake;
+
+        currentAnswer = "fake";
+    }
+}
+
+function checkAnswer(choice) {
+    const result = document.getElementById("result");
+
+    if (choice === currentAnswer) {
+        result.innerText = "✅ Correct!";
+    } else {
+        result.innerText = "❌ Wrong!";
+    }
+}
+
+// load first joke
+loadJoke();
+</script>
+
+</body>
+</html>
